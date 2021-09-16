@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using CursoWindowsFormsBiblioteca.Classes;
 
 namespace CursoWindowsForms
 {
@@ -90,7 +92,20 @@ namespace CursoWindowsForms
 
         private void newToolStripButton_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Efetuei um clique sobre o botão novo.");
+            // MessageBox.Show("Efetuei um clique sobre o botão novo.");
+
+            try
+            {
+                Cliente.Unit C = new Cliente.Unit();
+                C.Id = Txt_Codigo.Text;
+                C.ValidaClasse();
+                MessageBox.Show("Classe foi inicializada sem erros", "ByteBank", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (ValidationException Ex)
+            {
+                MessageBox.Show(Ex.Message, "ByteBank", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
         }
 
         private void openToolStripButton_Click(object sender, EventArgs e)
