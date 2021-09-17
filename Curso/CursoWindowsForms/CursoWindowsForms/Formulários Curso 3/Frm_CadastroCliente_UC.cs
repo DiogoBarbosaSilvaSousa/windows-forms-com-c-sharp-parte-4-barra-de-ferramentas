@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using CursoWindowsFormsBiblioteca;
 using CursoWindowsFormsBiblioteca.Classes;
 using Microsoft.VisualBasic;
 
@@ -97,8 +98,9 @@ namespace CursoWindowsForms
 
             try
             {
-               // Cliente.Unit C = new Cliente.Unit();
-                Cliente.Unit C = LeituraFormulario();          
+
+                Cliente.Unit C = new Cliente.Unit();
+                C = LeituraFormulario();
                 C.ValidaClasse();
                 C.ValidaComplemento();
 
@@ -108,7 +110,7 @@ namespace CursoWindowsForms
             {
                 MessageBox.Show(Ex.Message, "ByteBank", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            catch(Exception Ex)
+            catch (Exception Ex)
             {
                 MessageBox.Show(Ex.Message, "ByteBank", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
@@ -143,7 +145,7 @@ namespace CursoWindowsForms
             C.Nome = Txt_NomeCliente.Text;
             C.NomeMae = Txt_NomeMae.Text;
             C.NomePai = Txt_NomePai.Text;
-            if(Chk_TemPai.Checked)
+            if (Chk_TemPai.Checked)
             {
                 C.NaoTemPai = true;
             }
@@ -174,7 +176,7 @@ namespace CursoWindowsForms
             C.Cidade = Txt_Cidade.Text;
             C.Bairro = Txt_Bairro.Text;
 
-            if(Cmb_Estados.SelectedIndex < 0)
+            if (Cmb_Estados.SelectedIndex < 0)
             {
                 C.Estado = "";
             }
@@ -185,12 +187,12 @@ namespace CursoWindowsForms
 
             C.Telefone = Txt_Telefone.Text;
             C.Profissao = Txt_Profissao.Text;
-          
+
             if (Information.IsNumeric(Txt_RendaFamiliar))
             {
                 Double vRenda = Convert.ToDouble(Txt_RendaFamiliar);
 
-                if(vRenda < 0)
+                if (vRenda < 0)
                 {
                     C.RendaFamiliar = 0;
                 }
@@ -199,8 +201,44 @@ namespace CursoWindowsForms
                     //C.RendaFamiliar = Double.Parse(Txt_RendaFamiliar.Text);
                     C.RendaFamiliar = vRenda;
                 }
-            }                    
+            }
             return C;
+        }
+
+        private void Txt_CEP_Leave(object sender, EventArgs e)
+        {
+            string vCep = Txt_CEP.Text;
+            if (vCep != "")
+            {
+                if (vCep.Length == 8)
+                {
+                    if (Information.IsNumeric(vCep))
+                    {
+                        var vJson = Cls_Uteis.GeraJSONCEP(vCep);
+
+                        Cep.Unit CEP = new Cep.Unit();
+                        CEP = Cep.DesSerializedClassUnit(vJson);
+                        Txt_Logradouro.Text = CEP.logradouro;
+                        Txt_Bairro.Text = CEP.bairro;
+                        Txt_Cidade.Text = CEP.localidade;
+                        Txt_Complemento.Text = CEP.complemento;
+
+                        Cmb_Estados.SelectedIndex = -1;
+                        for (int i = 0; i <= Cmb_Estados.Items.Count - 1; i++)
+                        {
+                            var vPos = Strings.InStr(Cmb_Estados.Items[i].ToString(), "(" + CEP.uf + ")");
+                            if(vPos > 0)
+                            {
+                                Cmb_Estados.SelectedIndex = i;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+
+
         }
     }
 }
