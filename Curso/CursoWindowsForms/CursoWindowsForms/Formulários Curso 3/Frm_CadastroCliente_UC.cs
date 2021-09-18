@@ -188,9 +188,9 @@ namespace CursoWindowsForms
             C.Telefone = Txt_Telefone.Text;
             C.Profissao = Txt_Profissao.Text;
 
-            if (Information.IsNumeric(Txt_RendaFamiliar))
+            if (Information.IsNumeric(Txt_RendaFamiliar.Text))
             {
-                Double vRenda = Convert.ToDouble(Txt_RendaFamiliar);
+                Double vRenda = Convert.ToDouble(Txt_RendaFamiliar.Text);
 
                 if (vRenda < 0)
                 {
